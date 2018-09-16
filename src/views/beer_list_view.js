@@ -1,22 +1,20 @@
 const PubSub = require('../helpers/pub_sub.js');
 const BeerView = require('../views/beer_view.js');
 
-const BeerListView = function (container) {
-    this.beerListContainer = container;
+const BeerListView = function (beerListContainer) {
+    this.beerListContainer = beerListContainer;
 }
 
 BeerListView.prototype.bindEvents = function () {
     PubSub.subscribe('Beers:beer-data-ready', (event) => {
         this.allBeers = event.detail;
-        console.log(this.allBeers);
         this.render(this.allBeers);
     })
 
     BeerListView.prototype.render = function (someBeers) {
         someBeers.forEach((beer) => {
-            // const beerView = new BeerView(this.container, beer);
-            // beerView.render();
-            // console.log("beer");
+            const beerView = new BeerView(this.beerListContainer, beer);
+            beerView.render();
         })
     }
 }
