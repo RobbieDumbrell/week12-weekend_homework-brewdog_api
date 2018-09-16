@@ -27,7 +27,7 @@ BeerListView.prototype.bindEvents = function () {
         } else {
             selectedFilteredBeers = this.allBeers;
         }
-        
+
         this.beerListContainer.innerHTML = '';
         this.filteredBeers = selectedFilteredBeers;
         this.render(this.filteredBeers);
@@ -35,13 +35,24 @@ BeerListView.prototype.bindEvents = function () {
 
     PubSub.subscribe('ABVSortView:sort-abv', (event) => {
         const sortABVselection = event.detail;
-        if (sortABVselection === 'ascending') {
-            this.allBeers.sort(this.compareABVAscending)
-        } else if (sortABVselection === 'descending') {
-            this.allBeers.sort(this.compareABVDescending)
+
+        if (this.filteredBeers === null) {
+            if (sortABVselection === 'ascending') {
+                this.allBeers.sort(this.compareABVAscending)
+            } else if (sortABVselection === 'descending') {
+                this.allBeers.sort(this.compareABVDescending)
+            }
+            this.beerListContainer.innerHTML = '';
+            this.render(this.allBeers);
+        } else {
+            if (sortABVselection === 'ascending') {
+                this.filteredBeers.sort(this.compareABVAscending)
+            } else if (sortABVselection === 'descending') {
+                this.filteredBeers.sort(this.compareABVDescending)
+            }
+            this.beerListContainer.innerHTML = '';
+            this.render(this.filteredBeers);
         }
-        this.beerListContainer.innerHTML = '';
-        this.render(this.allBeers);
     })
 }
 
@@ -53,13 +64,13 @@ BeerListView.prototype.render = function (someBeers) {
 }
 
 BeerListView.prototype.compareABVAscending = function (beer1, beer2) {
-        if (beer1.abv > beer2.abv) {
-            return 1
-        } else if (beer1.abv < beer2.abv) {
-            return -1
-        } else {
-            return 0
-        }
+    if (beer1.abv > beer2.abv) {
+        return 1
+    } else if (beer1.abv < beer2.abv) {
+        return -1
+    } else {
+        return 0
+    }
 }
 
 BeerListView.prototype.compareABVDescending = function (beer1, beer2) {
