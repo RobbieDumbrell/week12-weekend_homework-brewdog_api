@@ -1,4 +1,5 @@
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,15 +8,24 @@
     <link rel="stylesheet" href="css/style.css">
     <title>Brewdog Thing</title>
 </head>
+
 <body>
 
     <h1>Welcome to the Brewdog Thing!</h1>
 
+    <select id="keg-filter">
+        <option selected disabled>--select filter--</option>
+        <option value="keg.png">Available in Kegs Only</option>
+        <option value="bottles">Available in Bottles And Kegs</option>
+        <option value="all">All</option>
+    </select>
+
     <div id="beer-list-container">
 
     </div>
-    
+
 
 
 </body>
+
 </html>

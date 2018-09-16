@@ -3,6 +3,8 @@ const BeerView = require('../views/beer_view.js');
 
 const BeerListView = function (beerListContainer) {
     this.beerListContainer = beerListContainer;
+    this.allBeers = null;
+    this.filteredBeers = null;
 }
 
 BeerListView.prototype.bindEvents = function () {
@@ -11,12 +13,32 @@ BeerListView.prototype.bindEvents = function () {
         this.render(this.allBeers);
     })
 
-    BeerListView.prototype.render = function (someBeers) {
-        someBeers.forEach((beer) => {
-            const beerView = new BeerView(this.beerListContainer, beer);
-            beerView.render();
-        })
-    }
+    PubSub.subscribe('KegFilterView:filter-selected', (event) => {
+        const filterSelected = event.detail;
+        let selectedFilteredBeers = null;
+        if (filterSelected === 'keg.png') {
+            selectedFilteredBeers = this.allBeers.filter((beer) => {
+                return (beer.image_url.slice(-7) === filterSelected)
+            })
+        } else if (filterSelected === 'bottles') {
+            selectedFilteredBeers = this.allBeers.filter((beer) => {
+                return (beer.image_url.slice(-7) !== 'keg.png')
+            })
+        } else {
+            selectedFilteredBeers = this.allBeers;
+        }
+        
+        this.beerListContainer.innerHTML = '';
+        this.filteredBeers = selectedFilteredBeers;
+        this.render(this.filteredBeers);
+    })
+}
+
+BeerListView.prototype.render = function (someBeers) {
+    someBeers.forEach((beer) => {
+        const beerView = new BeerView(this.beerListContainer, beer);
+        beerView.render();
+    })
 }
 
 module.exports = BeerListView;
