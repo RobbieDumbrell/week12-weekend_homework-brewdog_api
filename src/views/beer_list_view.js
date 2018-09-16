@@ -32,6 +32,17 @@ BeerListView.prototype.bindEvents = function () {
         this.filteredBeers = selectedFilteredBeers;
         this.render(this.filteredBeers);
     })
+
+    PubSub.subscribe('ABVSortView:sort-abv', (event) => {
+        const sortABVselection = event.detail;
+        if (sortABVselection === 'ascending') {
+            this.allBeers.sort(this.compareABVAscending)
+        } else if (sortABVselection === 'descending') {
+            this.allBeers.sort(this.compareABVDescending)
+        }
+        this.beerListContainer.innerHTML = '';
+        this.render(this.allBeers);
+    })
 }
 
 BeerListView.prototype.render = function (someBeers) {
@@ -39,6 +50,26 @@ BeerListView.prototype.render = function (someBeers) {
         const beerView = new BeerView(this.beerListContainer, beer);
         beerView.render();
     })
+}
+
+BeerListView.prototype.compareABVAscending = function (beer1, beer2) {
+        if (beer1.abv > beer2.abv) {
+            return 1
+        } else if (beer1.abv < beer2.abv) {
+            return -1
+        } else {
+            return 0
+        }
+}
+
+BeerListView.prototype.compareABVDescending = function (beer1, beer2) {
+    if (beer1.abv < beer2.abv) {
+        return 1
+    } else if (beer1.abv > beer2.abv) {
+        return -1
+    } else {
+        return 0
+    }
 }
 
 module.exports = BeerListView;
